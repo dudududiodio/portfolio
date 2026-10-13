@@ -1,0 +1,4091 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<script>
+//移动端检测
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+  alert("本作品集为PC横版交互网页，请使用电脑浏览器完整浏览；备用静态PDF作品集：此处粘贴你的PDF在线链接");
+}
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>琚泽云 · 设计作品集 2027校招</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* ============ 设计变量：浅色克制体系 ============ */
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --ink: #1C1C1A;
+    --ink2: #5A5955;
+    --ink3: #8B8A85;
+    --line: #E4E2DB;
+    --line2: #D2CFC6;
+    --accent: #2F5D8C;
+    --accent-soft: #EDF2F7;
+    --accent-line: #C3D2E0;
+    --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    --serif: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    overflow: hidden;
+    height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 作品集容器 */
+  .portfolio-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 单页样式 */
+  .page {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-content {
+    width: 100%;
+    max-width: 1200px;
+    padding: 60px 80px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* 页码导航 */
+  .page-nav {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    background: var(--surface);
+    border: 0.5px solid var(--line2);
+    padding: 8px 16px;
+    border-radius: 30px;
+  }
+
+  .nav-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 0.5px solid var(--line2);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .nav-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+  }
+
+  .page-indicator {
+    font-size: 13px;
+    color: var(--ink2);
+    min-width: 60px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 侧边目录按钮 */
+  .menu-btn {
+    position: fixed;
+    top: 28px;
+    right: 30px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 0.5px solid var(--line2);
+    color: var(--ink);
+    cursor: pointer;
+    z-index: 100;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .menu-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+  }
+
+  /* 目录面板 */
+  .toc-panel {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 320px;
+    height: 100vh;
+    background: var(--surface);
+    border-left: 0.5px solid var(--line2);
+    z-index: 200;
+    transition: right 0.4s ease;
+    padding: 58px 30px 30px;
+    overflow-y: auto;
+  }
+
+  .toc-panel.open {
+    right: 0;
+  }
+
+  .toc-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: transparent;
+    border: 0.5px solid var(--line2);
+    color: var(--ink2);
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .toc-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 22px;
+    letter-spacing: 2px;
+    color: var(--ink3);
+  }
+
+  .toc-item {
+    padding: 11px 14px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 13.5px;
+    color: var(--ink2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toc-item:hover {
+    background: var(--bg);
+  }
+
+  .toc-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .toc-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 0.5px solid var(--line2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .toc-item.active .toc-num {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* ========== 封面 ========== */
+  .cover-page {
+    background: var(--bg);
+  }
+
+  .cover-content {
+    text-align: center;
+    z-index: 1;
+  }
+
+  .cover-label {
+    font-size: 12px;
+    letter-spacing: 6px;
+    color: var(--ink3);
+    margin-bottom: 28px;
+  }
+
+  .cover-name {
+    font-family: var(--serif);
+    font-size: 68px;
+    font-weight: 400;
+    letter-spacing: 18px;
+    margin-bottom: 22px;
+    color: var(--ink);
+    padding-left: 18px;
+  }
+
+  .cover-title {
+    font-size: 19px;
+    color: var(--ink2);
+    margin-bottom: 36px;
+    letter-spacing: 3px;
+  }
+
+  .cover-divider {
+    width: 52px;
+    height: 1px;
+    background: var(--line2);
+    margin: 0 auto 36px;
+  }
+
+  .cover-subtitle {
+    font-size: 14.5px;
+    color: var(--ink2);
+    letter-spacing: 1px;
+    line-height: 2.1;
+  }
+
+  .cover-year {
+    position: absolute;
+    bottom: 60px;
+    right: 70px;
+    font-family: var(--serif);
+    font-size: 92px;
+    color: #E8E6DF;
+    letter-spacing: 4px;
+  }
+
+  /* ========== 关于我 ========== */
+  .about-page {
+    background: var(--bg);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .about-avatar {
+  width: 340px;
+  height: 460px;          /* 接近 3:4 或 2:3 的竖版比例 */
+  border-radius: 12px;    /* 圆角矩形，比正圆更适合人像 */
+  object-fit: cover;
+  object-position: center 25%;
+  display: block;
+  margin: 0 auto;
+  border: 0.5px solid var(--line2);
+}
+
+  .about-title {
+    font-family: var(--serif);
+    font-size: 38px;
+    font-weight: 400;
+    margin-bottom: 6px;
+    letter-spacing: 4px;
+    color: var(--ink);
+  }
+
+  .about-tagline {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-bottom: 26px;
+    letter-spacing: 3px;
+  }
+
+  .about-desc {
+    font-size: 14px;
+    color: var(--ink2);
+    line-height: 2;
+    margin-bottom: 28px;
+  }
+
+  .about-desc strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skill-tag {
+    padding: 7px 16px;
+    background: var(--surface);
+    border: 0.5px solid var(--line2);
+    border-radius: 20px;
+    font-size: 12.5px;
+    color: var(--ink2);
+  }
+
+  .skill-tag.highlight {
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+    color: var(--accent);
+  }
+
+  /* ========== 目录页 ========== */
+  .toc-page {
+    background: var(--bg);
+  }
+
+  .toc-page-title {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    letter-spacing: 6px;
+  }
+
+  .toc-page-subtitle {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-bottom: 46px;
+    letter-spacing: 3px;
+  }
+
+  .toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .toc-list-item {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .toc-list-item:hover {
+    border-color: var(--accent-line);
+    transform: translateX(6px);
+  }
+
+  .toc-list-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .toc-list-info {
+    flex: 1;
+  }
+
+  .toc-list-name {
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    color: var(--ink);
+  }
+
+  .toc-list-desc {
+    font-size: 12.5px;
+    color: var(--ink3);
+  }
+
+  .toc-list-page {
+    font-size: 13px;
+    color: var(--ink3);
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ========== 项目通用样式 ========== */
+  .project-page {
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .project-page .page-content {
+    padding: 50px 80px;
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 26px;
+  }
+
+  .project-num {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .project-name {
+    font-family: var(--serif);
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 1px;
+  }
+
+  .project-tags {
+    display: flex;
+    gap: 7px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .project-tag {
+    padding: 4px 11px;
+    background: var(--bg);
+    border: 0.5px solid var(--line);
+    border-radius: 4px;
+    font-size: 11.5px;
+    color: var(--ink2);
+  }
+
+  .project-tag.award {
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .project-meta {
+    text-align: right;
+    font-size: 12.5px;
+    color: var(--ink3);
+    line-height: 1.9;
+  }
+
+  .project-meta strong {
+    color: var(--ink2);
+    font-weight: 500;
+  }
+
+  /* 图片占位框 */
+  .img-placeholder {
+    background: var(--bg);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink3);
+    font-size: 13px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    border-radius: inherit;
+    background: var(--bg);
+  }
+
+  /* 项目2：文藏徽州 - 第1页 */
+  .project1-p1-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .project1-main-img {
+    height: 100%;
+    min-height: 200px;
+  }
+
+  .project1-info {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .info-block h4 {
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 7px;
+    font-weight: 500;
+    letter-spacing: 2px;
+  }
+
+  .info-block p {
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.85;
+  }
+
+  /* 项目1 - 第2页：VI系统 */
+  .vi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .vi-item {
+    border-radius: 8px;
+    min-height: 60px;
+  }
+
+  .vi-item.large {
+    grid-column: span 2;
+    min-height: 60px;
+  }
+
+  /* ===== 项目1 - 第3页：设计思维导图 ===== */
+  .mind-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 16px;
+  }
+
+  .mind-title {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 1px;
+  }
+
+  .mind-sub {
+    font-size: 12px;
+    color: var(--ink3);
+    letter-spacing: 1px;
+    padding-bottom: 5px;
+  }
+
+  /* 导图主体：三列均匀分布，居中对齐 */
+  .mind-map {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 30px;
+    flex: 1;
+    min-height: 0;
+    align-content: center;
+    justify-items: center;
+    width: 100%;
+  }
+
+  .mind-node {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 节点之间的连线：同一行内相邻节点才连 */
+  .mind-node::before {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: -16px;
+    width: 12px;
+    height: 1px;
+    background: var(--line2);
+  }
+
+  /* 每行第一个节点、以及跨行起始节点不画线 */
+  .mind-node:nth-child(3n + 1)::before {
+    display: none;
+  }
+
+  /* 第4个节点是第二行起点，也不画线 */
+  .mind-node:nth-child(4)::before {
+    display: none;
+  }
+
+  /* 节点圆点 */
+  .mind-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mind-stage {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .mind-en {
+    font-size: 10px;
+    color: var(--ink3);
+    letter-spacing: 2px;
+    margin-bottom: 9px;
+  }
+
+  .mind-detail {
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.6;
+    padding-left: 11px;
+    position: relative;
+    margin-bottom: 5px;
+  }
+
+  .mind-detail::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--line2);
+  }
+
+  .mind-key {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* 输出物标签 */
+  .mind-output {
+    margin-top: auto;
+    padding: 7px 10px;
+    background: var(--accent-soft);
+    border-radius: 7px;
+    font-size: 11.5px;
+    color: var(--accent);
+    line-height: 1.6;
+  }
+
+  /* 底部执行层条 */
+  .exec-band {
+    margin-top: 14px;
+    padding: 11px 16px;
+    background: var(--bg);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .exec-label {
+    font-size: 11.5px;
+    color: var(--ink3);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+    line-height: 1.5;
+  }
+
+  .exec-label b {
+    display: block;
+    color: var(--ink2);
+    font-weight: 500;
+    font-size: 12.5px;
+  }
+
+  .exec-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+  }
+
+  .exec-step {
+    font-size: 11.5px;
+    color: var(--ink2);
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 5px;
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+
+  .exec-arrow {
+    font-size: 11px;
+    color: var(--line2);
+  }
+
+  /* 项目1 - 第4页：应用延展 */
+  .application-grid {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 14px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .app-item {
+    border-radius: 8px;
+  }
+
+  .app-item.big {
+    grid-row: span 2;
+  }
+
+  /* ================================================
+     统一等分网格 v2：以图为尺度，不以格为尺度
+     原则：容器按图片原始比例撑开，灰底与图贴合
+     ================================================ */
+  .grid-even {
+    display: grid;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    max-height: 100%;
+    align-content: center;
+  }
+
+  /* 三列等分：每格内图占满，灰底贴合图边 */
+  .grid-even.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* 两列等分 */
+  .grid-even.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 单格：图片最大化撑开可用空间 */
+  .grid-even .img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* 关键：图片按 contain 完整显示，容器高度由 flex 撑开而非固定值 */
+  .grid-even img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  /* 竖图占位（徽州应用延展：大图在左） */
+  .grid-even.tall-main {
+    grid-template-columns: 1.65fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .grid-even.tall-main .main-img {
+    grid-row: span 2;
+  }
+
+  /* ========== 更多作品页网格（16 / 17页）============ */
+  /* 作品少时纵向堆叠，每张图都能放到最大 */
+  .more-grid-even {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    max-height: 100%;
+    justify-content: center;
+  }
+
+  /* ========== 荣誉页（16 / 17 页）============
+     证书图放大撑满 + 文字独立成彩色块置于图下 */
+  .honor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    flex: 1;
+    min-height: 0;
+    justify-content: center;
+  }
+
+  .honor-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* 证书图：占据绝大部分空间 */
+  .honor-figure {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .honor-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* 文字块：彩色底+ 左侧色条，与图分离 */
+  .honor-caption {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    background: var(--accent-soft);
+    border-top: 3px solid var(--accent);
+  }
+
+  .honor-caption .cap-rank {
+    font-family: var(--serif);
+    font-size: 26px;
+    color: var(--accent);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 46px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .honor-caption .cap-text {
+    min-width: 0;
+  }
+
+  .honor-caption .cap-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 3px;
+    line-height: 1.35;
+  }
+
+  .honor-caption .cap-tag {
+    font-size: 11.5px;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+
+  /* 第二条用不同色系区分 */
+  .honor-item.alt .honor-caption {
+    background: #F5EFE6;
+    border-top-color: #9C7B4A;
+  }
+
+  .honor-item.alt .honor-caption .cap-rank,
+  .honor-item.alt .honor-caption .cap-tag {
+    color: #9C7B4A;
+  }
+
+  .honor-item.alt .honor-figure {
+    background: #FBF8F3;
+  }
+
+/* ========== 更多作品页（17页）：三栏并列，图占主要空间 ========== */
+  .honor-list.three {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  .honor-list.three .honor-item {
+    flex-direction: column;
+  }
+
+  .honor-list.three .honor-figure {
+    padding: 12px;
+  }
+
+  .honor-list.three .honor-caption {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 14px 16px;
+  }
+
+  .honor-list.three .cap-rank {
+    font-size: 20px;
+    width: auto;
+  }
+
+  .honor-list.three .cap-name {
+    font-size: 14px;
+  }
+
+  /* ========== 成果展示页（第6 / 12 / 15 页共用）============
+     图放大撑满+ 文字块独立成彩色块置于图下，与荣誉页视觉统一 */
+  .show-list {
+    display: grid;
+    gap: 22px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .show-list.two {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .show-list.three {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .show-item {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* 图：占据绝大部分空间 */
+  .show-figure {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .show-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* 文字块：彩色底+ 顶部色条 */
+  .show-caption {
+    flex-shrink: 0;
+    padding: 13px 16px;
+    background: var(--accent-soft);
+    border-top: 3px solid var(--accent);
+  }
+
+  .show-caption .cap-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 5px;
+    line-height: 1.35;
+  }
+
+  .show-caption .cap-desc {
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+
+  .show-caption .cap-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    color: var(--accent);
+    background: var(--surface);
+    border: 0.5px solid var(--accent-line);
+    border-radius: 4px;
+    padding: 2px 7px;
+    margin-top: 8px;
+  }
+
+  /* 三栏时文字块略紧凑 */
+  .show-list.three .show-caption {
+    padding: 12px 14px;
+  }
+
+  .show-list.three .show-caption .cap-name {
+    font-size: 13.5px;
+  }
+
+  .show-list.three .show-caption .cap-desc {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  /* 暖色变体 */
+  .show-item.alt .show-caption {
+    background: #F5EFE6;
+    border-top-color: #9C7B4A;
+  }
+
+  .show-item.alt .show-caption .cap-tag {
+    color: #9C7B4A;
+    border-color: #DCC9AE;
+  }
+
+  .show-item.alt .show-figure {
+    background: #FBF8F3;
+  }
+
+  /* ================================================
+     策略推导页（第 4 / 7 / 14 页共用）
+     左图缩小 + 右侧思维导图与表格，强调思考过程
+     ================================================ */
+  .derive-layout {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 28px;
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  /* 左侧：图缩小，只占约三成 */
+  .derive-figure {
+    background: var(--bg);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    min-height: 0;
+  }
+
+  .derive-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* 右侧：推导内容区 */
+  .derive-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+  }
+
+  /* 导图：横向推进的逻辑链 */
+  .derive-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    flex-shrink: 0;
+  }
+
+  .derive-step {
+    flex: 1;
+    position: relative;
+    padding-right: 18px;
+    min-width: 0;
+  }
+
+  /* 节点间箭头 */
+  .derive-step::after {
+    content: '›';
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--line2);
+    font-family: var(--serif);
+  }
+
+  .derive-step:last-child {
+    padding-right: 0;
+  }
+
+  .derive-step:last-child::after {
+    display: none;
+  }
+
+  .derive-step .ds-num {
+    font-family: var(--serif);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+  }
+
+  .derive-step .ds-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+
+  .derive-step .ds-desc {
+    font-size: 11px;
+    color: var(--ink3);
+    line-height: 1.6;
+  }
+
+  /* 关键结论块：暖色高亮 */
+  .derive-conclusion {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    flex-shrink: 0;
+  }
+
+  .derive-conclusion .dc-label {
+    font-size: 10.5px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .derive-conclusion .dc-text {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  .derive-conclusion.alt {
+    background: #F5EFE6;
+    border-left-color: #9C7B4A;
+  }
+
+  .derive-conclusion.alt .dc-label {
+    color: #9C7B4A;
+  }
+
+  /* 转化路径表：文化符号 → 设计语言 */
+  .transform-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .transform-table th {
+    text-align: left;
+    padding: 8px 10px;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .transform-table td {
+    padding: 8px 10px;
+    color: var(--ink2);
+    border-bottom: 1px solid var(--line);
+    line-height: 1.55;
+    vertical-align: top;
+  }
+
+  .transform-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .transform-table td:first-child {
+    color: var(--ink);
+    font-weight: 500;
+    width: 24%;
+  }
+
+  .transform-table .tt-arrow {
+    color: var(--line2);
+    text-align: center;
+    width: 26px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .derive-table-cap {
+    font-size: 10.5px;
+    color: var(--ink3);
+    margin-top: 8px;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+
+  /* ================================================
+     第4页：纯作品展示（两张图并列）
+     ================================================ */
+  .dual-figure {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .dual-figure .img-placeholder {
+    min-height: 0;
+  }
+
+  /* 图下方的说明条 */
+  .figure-caption-strip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 28px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+
+  .fcs-item {
+    font-size: 11.5px;
+    color: var(--ink3);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .fcs-item::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--line2);
+  }
+
+  /* ================================================
+     第5页：调研报告 + 推导链
+     ================================================ */
+  /* 顶部四张调研卡 */
+  .research-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+  }
+
+  .research-card {
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    padding: 13px 15px;
+  }
+
+  .research-card .rc-label {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .research-card .rc-text {
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+
+  /* 底部：转化表 + 结论并排 */
+  .research-bottom {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+    margin-top: 14px;
+  }
+
+  .research-bottom .derive-conclusion {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+
+  /* 紧凑版转化表 */
+  .transform-table.compact td {
+    padding: 6px 9px;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .transform-table.compact th {
+    padding: 6px 9px;
+    font-size: 10.5px;
+  }
+
+  /* ================================================
+     第7页：获奖证书 + 收获与反思
+     ================================================ */
+  .award-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 24px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* 左：证书 */
+  .award-cert {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .award-cert .img-placeholder {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: var(--bg);
+  }
+
+  .award-caption {
+    flex-shrink: 0;
+    padding: 13px 16px;
+    background: var(--accent-soft);
+    border-top: 3px solid var(--accent);
+  }
+
+  .award-caption .cap-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+
+  .award-caption .cap-desc {
+    font-size: 11px;
+    color: var(--ink2);
+    line-height: 1.6;
+  }
+
+  .award-caption .cap-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    color: var(--accent);
+    background: var(--surface);
+    border: 0.5px solid var(--accent-line);
+ border-radius: 4px;
+    padding: 2px 7px;
+    margin-top: 8px;
+  }
+
+  /* 右：收获与反思 */
+  .gain-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+  }
+
+  .gain-block {
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 17px;
+  }
+
+  .gain-block.alt {
+    background: #F5EFE6;
+    border-color: #DCC9AE;
+  }
+
+  .gain-label {
+    font-size: 11.5px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 9px;
+    padding-bottom: 7px;
+border-bottom: 1px solid var(--line);
+  }
+
+  .gain-block.alt .gain-label {
+    color: #9C7B4A;
+  }
+
+  .gain-list {
+    list-style: none;
+  }
+
+  .gain-list li {
+    position: relative;
+    padding-left: 13px;
+    margin-bottom: 8px;
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+
+  .gain-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .gain-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+top: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--line2);
+  }
+
+  .gain-list li b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* ================================================
+     第11页：能力沉淀（三张大能力卡）
+     ================================================ */
+  .ability-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .ability-card {
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .ability-card.alt {
+    background: #FBF8F3;
+    border-color: #DCC9AE;
+  }
+
+  .ab-index {
+    font-family: var(--serif);
+    font-size: 24px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .ability-card.alt .ab-index {
+    color: #9C7B4A;
+  }
+
+  .ab-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .ab-desc {
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.65;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+
+  /* 六步流程列表 */
+  .ab-steps {
+    list-style: none;
+    counter-reset: abstep;
+    flex: 1;
+  }
+
+  .ab-steps li {
+    counter-increment: abstep;
+    position: relative;
+    padding-left: 26px;
+    margin-bottom: 10px;
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.6;
+  }
+
+  .ab-steps li:last-child {
+    margin-bottom: 0;
+  }
+
+  .ab-steps li::before {
+    content: counter(abstep);
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 10px;
+    font-family: var(--serif);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ab-steps li b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* 对比块 */
+  .ab-compare {
+    margin-bottom: 12px;
+  }
+
+  .cmp-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .cmp-bad {
+    background: var(--bg);
+  }
+
+  .cmp-good {
+    background: var(--accent-soft);
+  }
+
+  .cmp-label {
+    font-size: 10.5px;
+    color: var(--ink3);
+    flex-shrink: 0;
+    width: 62px;
+    padding-top: 1px;
+  }
+
+  .cmp-good .cmp-label {
+    color: var(--accent);
+  }
+
+  .cmp-text {
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.6;
+  }
+
+  .cmp-good .cmp-text {
+    color: var(--ink);
+  }
+
+  /* 要点列表 */
+  .ab-list {
+    list-style: none;
+    flex: 1;
+  }
+
+  .ab-list li {
+    position: relative;
+    padding-left: 13px;
+    margin-bottom: 11px;
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+
+  .ab-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .ab-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--line2);
+  }
+
+  .ab-list li b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* 卡片底部结论 */
+  .ab-note {
+    margin-top: auto;
+    padding: 11px 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    font-size: 10.5px;
+    color: var(--ink2);
+    line-height: 1.65;
+    flex-shrink: 0;
+  }
+
+  .ability-card.alt .ab-note {
+    background: var(--surface);
+  }
+
+  .ab-note b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .more-grid-even .more-card {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  /* 缩略图：占卡片宽度的 52%，撑满高度 */
+  .more-grid-even .more-card-img {
+    flex: 0 0 52%;
+    min-width: 0;
+    border-radius: 0;
+    border-right: 0.5px solid var(--line);
+  }
+
+  .more-grid-even .more-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .more-grid-even .more-card-info {
+    flex: 1;
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .more-grid-even .more-card-name {
+    font-size: 15px;
+  }
+
+  .more-grid-even .more-card-tag {
+    font-size: 11.5px;
+    line-height: 1.6;
+  }
+
+  /* ========== 项目2：洛阳文创 ========== */
+  .project2-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 30px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .project2-main-img {
+    min-height: 350px;
+  }
+
+  .project2-text {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* 项目2 - 第2页 */
+  .product-showcase {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .product-card {
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-img {
+    height: 180px;
+    border-radius: 0;
+    border-bottom: 0.5px solid var(--line);
+  }
+
+  .product-info {
+    padding: 15px;
+  }
+
+  .product-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: var(--ink);
+  }
+
+  .product-desc {
+    font-size: 12px;
+    color: var(--ink3);
+    line-height: 1.7;
+  }
+
+  /* ========== 数据小表（第5页洛阳市场落地性调研）============ */
+  .datatable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+
+  .datatable th {
+    text-align: left;
+    padding: 5px 6px;
+    font-weight: 500;
+    color: var(--ink3);
+    border-bottom: 1px solid var(--line);
+    font-size: 10.5px;
+  }
+
+  .datatable td {
+    padding: 5px 6px;
+    color: var(--ink2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .datatable tr:last-child td {
+    border-bottom: none;
+  }
+
+  .datatable td:last-child,
+  .datatable th:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .datatable-cap {
+    font-size: 10.5px;
+    color: var(--ink3);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* ========== 第9页：数据图表网格 ========== */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 18px;
+    flex: 1;
+    min-height: 0;
+    /* 图表区不占满，给上方思维导图留呼吸空间 */
+    max-height: 218px;
+    align-content: center;
+  }
+
+  .chart-card {
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .chart-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .chart-sub {
+    font-size: 10.5px;
+    color: var(--ink3);
+    margin-bottom: 8px;
+  }
+
+  .chart-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 饼图：SVG 用 */
+  .pie-chart {
+    width: 100%;
+    height: 100%;
+    max-height: 118px;
+  }
+
+  /* 柱状图：纯 CSS 条形 */
+  .bar-chart {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bar-label {
+    font-size: 10.5px;
+    color: var(--ink2);
+    width: 84px;
+    flex-shrink: 0;
+    line-height: 1.3;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 13px;
+    background: var(--bg);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+  }
+
+  .bar-val {
+    font-size: 10.5px;
+    color: var(--ink2);
+    width: 42px;
+    text-align: right;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chart-note {
+    font-size: 10px;
+    color: var(--ink3);
+    margin-top: 8px;
+    line-height: 1.45;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* 图例 */
+  .pie-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin-top: 8px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--ink2);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  
+
+  /* ========== 更多作品 ========== */
+  .more-page {
+    background: var(--bg);
+  }
+
+  .more-title {
+    font-family: var(--serif);
+    font-size: 34px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    letter-spacing: 3px;
+  }
+
+  .more-subtitle {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-bottom: 34px;
+    letter-spacing: 2px;
+  }
+
+  .more-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .more-card {
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+
+  .more-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-line);
+  }
+
+  .more-card-img {
+    height: 132px;
+  }
+
+  .more-card-info {
+    padding: 14px;
+  }
+
+  .more-card-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+
+  .more-card-tag {
+    font-size: 11px;
+    color: var(--ink3);
+    line-height: 1.5;
+  }
+
+  /* ========== 封底 ========== */
+  .end-page {
+    background: var(--bg);
+    text-align: center;
+  }
+
+  .end-content {
+    text-align: center;
+  }
+
+  .end-thanks {
+    font-family: var(--serif);
+    font-size: 58px;
+    font-weight: 400;
+    letter-spacing: 14px;
+    margin-bottom: 26px;
+    color: var(--ink);
+    padding-left: 14px;
+  }
+
+  .end-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--line2);
+    margin: 0 auto 34px;
+  }
+
+  .end-contact {
+    font-size: 14px;
+    color: var(--ink2);
+    line-height: 2.3;
+    letter-spacing: 1px;
+  }
+
+  .end-contact p {
+    margin-bottom: 5px;
+  }
+
+  .end-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 22px;
+    letter-spacing: 5px;
+  }
+
+  /* 键盘提示 */
+  .keyboard-hint {
+    position: fixed;
+    bottom: 32px;
+    left: 30px;
+    font-size: 11.5px;
+    color: var(--ink3);
+    z-index: 100;
+  }
+
+  .keyboard-hint kbd {
+    padding: 2px 7px;
+    background: var(--surface);
+    border: 0.5px solid var(--line2);
+    border-radius: 4px;
+    font-family: monospace;
+    margin: 0 2px;
+  }
+
+  /* ========== 步骤卡片（第13页复用） ========== */
+  .workflow-step {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 0.5px solid var(--line);
+  }
+
+  .step-num {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+
+  .step-name {
+    font-size: 14.5px;
+    font-weight: 500;
+    margin-bottom: 9px;
+    color: var(--ink);
+  }
+
+  .step-desc {
+    font-size: 12px;
+    color: var(--ink3);
+    line-height: 1.75;
+  }
+
+  /* ========== 打印 / 导出PDF：每页一屏 ========== */
+  @media print {
+    @page { size: 1280px 800px; margin: 0; }
+    body { overflow: visible; height: auto; background: #fff; }
+    .portfolio-container {
+      display: block;
+      width: 100%;
+      height: auto;
+      transform: none !important;
+    }
+    .page {
+      width: 1280px;
+      height: 800px;
+      page-break-after: always;
+      break-after: page;
+      position: relative;
+    }
+    .page-nav, .menu-btn, .toc-panel, .keyboard-hint { display: none !important; }
+  }
+  /* ========== 第12页：我做的（图为主，文字精简）============ */
+  .work-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .work-gallery .wg-item {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* 图占约七成，文字占三成 */
+  .work-gallery .wg-figure {
+    flex: 0 0 68%;
+    min-width: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .work-gallery .wg-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .work-gallery .wg-caption {
+    flex: 1;
+    min-width: 0;
+    padding: 16px 18px;
+    border-left: 3px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .work-gallery .wg-item:nth-child(2) .wg-caption {
+    border-left-color: #9C7B4A;
+  }
+
+  .work-gallery .wg-item:nth-child(2) .wg-figure {
+    background: #FBF8F3;
+  }
+
+  .work-gallery .wg-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+
+  .work-gallery .wg-desc {
+    font-size: 11px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+
+  /* ========== 第14页：收获（与7/11页视觉统一的能力清单形式）============ */
+  .harvest-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 18px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .hv-card {
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .hv-card.alt {
+    background: #FBF8F3;
+    border-color: #DCC9AE;
+  }
+
+  .hv-num {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .hv-card.alt .hv-num {
+    color: #9C7B4A;
+  }
+
+  .hv-title {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .hv-rule {
+    height: 1px;
+    background: var(--line);
+    margin-bottom: 11px;
+    flex-shrink: 0;
+  }
+
+  .hv-list {
+    list-style: none;
+    flex: 1;
+  }
+
+  .hv-list li {
+    position: relative;
+    padding-left: 12px;
+    margin-bottom: 8px;
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+
+  .hv-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .hv-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--line2);
+  }
+
+  /* 卡片底部结论块，贴底对齐 */
+  .hv-note {
+    margin-top: auto;
+    padding: 9px 11px;
+    background: var(--bg);
+    border-radius: 7px;
+    font-size: 10.5px;
+    color: var(--ink2);
+    line-height: 1.6;
+    flex-shrink: 0;
+  }
+
+  .hv-card.alt .hv-note {
+    background: var(--surface);
+  }
+
+  /* ========== 第12页底部数据条 ========== */
+  .xhs-stats-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+
+  .xsi {
+    text-align: center;
+  }
+
+  .xsi-num {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--accent);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .xsi-label {
+    font-size: 11px;
+    color: var(--ink3);
+    margin-top: 3px;
+  }
+
+  /* ========== 第15页：三列作品展示（末列两图上下排）============ */
+  .ip-gallery {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr 1fr;
+    gap: 18px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .igg-col {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .igg-figure {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .igg-figure.half {
+    flex: 1 1 0;
+    padding: 8px;
+  }
+
+  .igg-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .igg-caption {
+    flex-shrink: 0;
+    padding: 12px 15px;
+    border-top: 3px solid var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .igg-caption .ic-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .igg-caption .ic-desc {
+    font-size: 10.5px;
+    color: var(--ink2);
+    line-height: 1.6;
+  }
+
+  /* 末列暖色变体 */
+  .igg-col.stacked .igg-caption {
+    background: #F5EFE6;
+    border-top-color: #9C7B4A;
+  }
+
+  .igg-col.stacked .igg-figure {
+    background: #FBF8F3;
+  }
+
+  .igg-col.stacked .igg-figure.half + .igg-figure.half {
+    border-top: 0.5px solid var(--line);
+  }
+
+  /* ========== 第16页：三大理由 + 左右分栏 ========== */
+  .research-row.three {
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 14px;
+  }
+
+  .reason-bottom {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .reason-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .reason-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+
+  /* 紧凑版推导链 */
+  .derive-flow.compact {
+    padding: 13px 15px;
+    flex-shrink: 0;
+  }
+
+  .derive-flow.compact .derive-step .ds-desc {
+    font-size: 10.5px;
+  }
+
+  .reason-left .transform-table {
+    flex: 1;
+  }
+
+  /* 图表卡紧凑版 */
+  .chart-card.flat {
+    padding: 14px 16px;
+    flex: 1;
+    justify-content: flex-start;
+  }
+
+  .chart-card.flat .chart-body {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .reason-right .derive-conclusion {
+    flex-shrink: 0;
+  }
+
+  /* ============================================================
+     版式重平衡：第 5 / 10 / 13 页
+     上半（调研卡）放大 · 中段（推导链）保持原样 · 下半（核心命题）收小
+     整体由「顶部堆叠」改为「页面垂直居中」
+     ============================================================ */
+  .layout-rebalance .page-content {
+    justify-content: center;
+    gap: 22px;
+  }
+
+  /* 清除各段原有外边距，统一交给 flex gap 控制，避免间距叠加 */
+  .layout-rebalance .mind-header,
+  .layout-rebalance .research-row,
+  .layout-rebalance .research-row.three,
+  .layout-rebalance .research-bottom,
+  .layout-rebalance .reason-bottom {
+    margin: 0;
+  }
+
+  /* —— 上半：四张调研卡放大 —— */
+  .layout-rebalance .research-row {
+    gap: 18px;
+  }
+
+  .layout-rebalance .research-card {
+    padding: 18px 20px;
+  }
+
+  .layout-rebalance .research-card .rc-label {
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    margin-bottom: 9px;
+    padding-bottom: 9px;
+  }
+
+  .layout-rebalance .research-card .rc-text {
+    font-size: 13.5px;
+    line-height: 1.8;
+  }
+
+  /* —— 中段：推导链尺寸保持原样 —— */
+
+  /* —— 下半：按内容高度排布，不再被拉伸撑满 —— */
+  .layout-rebalance .research-bottom,
+  .layout-rebalance .reason-bottom {
+    flex: 0 0 auto;
+    align-items: start;
+  }
+
+  .layout-rebalance .research-bottom .derive-conclusion {
+    height: auto;
+  }
+
+  .layout-rebalance .transform-table,
+  .layout-rebalance .reason-left .transform-table {
+    flex: 0 0 auto;
+  }
+
+  /* —— 核心命题块：略微收小 —— */
+  .layout-rebalance .derive-conclusion {
+    padding: 13px 17px;
+  }
+
+  .layout-rebalance .derive-conclusion .dc-label {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    margin-bottom: 5px;
+  }
+
+  .layout-rebalance .derive-conclusion .dc-text {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* ============================================================
+     AI 主题页（第 16 / 17 页）通用面板
+     ============================================================ */
+  .ai-panel {
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .ai-panel.warm {
+    background: #FBF8F3;
+    border-color: #DCC9AE;
+  }
+
+  .ai-panel-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+  }
+
+  .ai-panel-title .ai-idx {
+    font-family: var(--serif);
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  .ai-panel.warm .ai-panel-title .ai-idx {
+    color: #9C7B4A;
+  }
+
+  .ai-panel-sub {
+    font-size: 10.5px;
+    color: var(--ink3);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .ai-list {
+    list-style: none;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .ai-list li {
+    position: relative;
+    padding-left: 13px;
+    font-size: 11.5px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+
+  .ai-list li b {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .ai-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .ai-panel.warm .ai-list li::before {
+    background: #9C7B4A;
+  }
+
+  /* 第16页底部：三栏（工具表 + 真实实践 + 持续学习） */
+  .page-ai .research-bottom {
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 18px;
+  }
+
+  /* 第17页：收获卡按内容高度排布，避免底部结论块压到导航条 */
+  .page-harvest .harvest-grid {
+    flex: 0 0 auto;
+  }
+
+  .page-harvest .derive-conclusion {
+    margin-top: 0 !important;
+  }
+
+
+</style>
+</head>
+<body>
+
+<!-- 目录按钮 -->
+<button class="menu-btn" onclick="toggleToc()">☰</button>
+
+<!-- 目录面板 -->
+<div class="toc-panel" id="tocPanel">
+  <button class="toc-close" onclick="toggleToc()">✕</button>
+  <div class="toc-title">目录 / CONTENTS</div>
+
+  <!-- 方向切换：同一套作品集，按岗位侧重重新排序与强调 -->
+  
+  <div class="toc-item active" onclick="goToPage(0)">
+    <span class="toc-num">01</span>
+    <span>封面</span>
+  </div>
+  <div class="toc-item" onclick="goToPage(1)">
+    <span class="toc-num">02</span>
+    <span>关于我</span>
+  </div>
+  <div class="toc-item" onclick="goToPage(2)">
+    <span class="toc-num">03</span>
+    <span>作品目录</span>
+  </div>
+	 
+  <div class="toc-item" onclick="goToPage(3)">
+    <span class="toc-num">04</span>
+    <span>洛阳文创 · 好创意国奖</span>
+  </div>
+  <div class="toc-item" onclick="goToPage(6)">
+    <span class="toc-num">05</span>
+    <span>文藏徽州 · 品牌设计</span>
+  </div>
+	<div class="toc-item" onclick="goToPage(9)">
+    <span class="toc-num">06</span>
+    <span>京剧IP到包包品牌的设计</span>
+  </div>
+<div class="toc-item" onclick="goToPage(13)">
+    <span class="toc-num">07</span>
+    <span>对AI工具的理解与适应</span>
+  </div>
+  <div class="toc-item" onclick="goToPage(15)">
+    <span class="toc-num">08</span>
+    <span>其他获奖作品</span>
+  </div>
+ <div class="toc-item" onclick="goToPage(16)">
+    <span class="toc-num">09</span>
+    <span>更多作品</span>
+  </div>	
+  <div class="toc-item" onclick="goToPage(17)">
+    <span class="toc-num">10</span>
+    <span>联系我</span>
+  </div>
+</div>
+
+<!-- 键盘提示 -->
+<div class="keyboard-hint">
+  <kbd>←</kbd> <kbd>→</kbd> 翻页
+</div>
+
+<!-- 页码导航 -->
+<div class="page-nav">
+  <button class="nav-btn" onclick="prevPage()">←</button>
+  <span class="page-indicator"><span id="currentPage">1</span> / <span id="totalPages">17</span></span>
+  <button class="nav-btn" onclick="nextPage()">→</button>
+</div>
+
+<!-- 作品集容器 -->
+<div class="portfolio-container" id="portfolio">
+
+  <!-- 第1页：封面 -->
+  <div class="page cover-page">
+    <div class="cover-content">
+      <div class="cover-label">BRAND PORTFOLIO</div>
+    <div class="cover-name">琚泽云</div>
+      <div class="cover-title">2027 校招作品集｜REDesign AI视觉效果设计师</div>
+      <div class="cover-divider"></div>
+      <div class="cover-subtitle" style="font-weight:bold; font-size:1.15em;">
+   用设计思维结合实际市场，做可落地的设计与传播<br>
+        让文化真正走进生活，让品牌具有鲜明特点
+   </div>
+    </div>
+    <div class="cover-year">2026</div>
+</div>
+
+  <!-- 第2页：关于我 -->
+  <div class="page about-page">
+    <div class="page-content">
+      <div class="about-grid">
+        <div>
+          <img  src="更多/头像.jpg" class="about-avatar" alt="头像">
+ </div>
+        <div>
+   <div class="about-title">关于我</div>
+          <div class="about-tagline">ABOUT ME</div>
+          <div class="about-desc">
+    你好，我是琚泽云，一名视觉传达设计专业本科在读学生。<br><br>
+         我相信<span style="font-size:1.2em; background:#ffe8cc; padding:3px 6px; border-radius:4px;"><strong>好的设计源于对人的理解、对市场的熟悉和对文化的尊重</strong></span>。从文化IP孵化到文创产品策划，从品牌视觉系统到品牌全案设计，我始终在探索"如何用设计思维让文化和商业更好地结合"。<br><br>
+            连续两年获得国家励志奖学金，设计作品获国奖。具备<strong>品牌策略+视觉设计+AIGC使用</strong>的复合能力，擅长从用户需求和文化洞察出发，打造有温度、有市场的品牌。
+     </div>
+<div style="margin-top:24px;display:flex;flex-direction:column;gap:14px;">
+
+  <div style="display:flex;gap:12px;align-items:flex-start;">
+    <div style="flex:0 0 auto;width:3px;height:40px;background:var(--accent);margin-top:4px;"></div>
+    <div>
+      <div style="font-weight:600;color:var(--ink);margin-bottom:4px;">拥抱AI时代</div>
+      <div style="font-size:0.88em;line-height:1.65;color:var(--ink2);">我对AI工具的发展持积极开放态度，愿意主动学习、快速适应，并将AI纳入设计工作流中。</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:flex-start;">
+    <div style="flex:0 0 auto;width:3px;height:40px;background:var(--accent);margin-top:4px;"></div>
+    <div>
+      <div style="font-weight:600;color:var(--ink);margin-bottom:4px;">AI是协作工具</div>
+      <div style="font-size:0.88em;line-height:1.65;color:var(--ink2);">我不认为AI会替代设计师。真正有价值的设计仍然需要人的审美判断、文化理解与创意决策，AI更适合承担灵感发散、方案迭代和效率辅助。</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:flex-start;">
+    <div style="flex:0 0 auto;width:3px;height:40px;background:var(--accent);margin-top:4px;"></div>
+    <div>
+      <div style="font-weight:600;color:var(--ink);margin-bottom:4px;">紧跟Agent趋势</div>
+      <div style="font-size:0.88em;line-height:1.65;color:var(--ink2);">我期待在Agent时代探索更智能的设计工作方式，把AI能力与视觉传达、文创IP设计结合起来，形成更高效、更系统的设计方法。</div>
+    </div>
+  </div>
+
+</div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第3页：目录 -->
+  <div class="page toc-page">
+    <div class="page-content">
+      <div class="toc-page-title">作品目录</div>
+      <div class="toc-page-subtitle">SELECTED WORKS · 3个项目</div>
+      <div class="toc-list">
+ <div class="toc-list-item" onclick="goToPage(3)">
+          <div class="toc-list-num">01</div>
+    <div class="toc-list-info">
+       <div class="toc-list-name">洛阳文创产品策划·AI辅助设计</div>
+            <div class="toc-list-desc">文创商业 / 中国好创意 国家级三等奖</div>
+          </div>
+          <div class="toc-list-page">P04-06</div>
+        </div>
+        <div class="toc-list-item" onclick="goToPage(6)">
+          <div class="toc-list-num">02</div>
+ <div class="toc-list-info">
+	       <div class="toc-list-name">文藏徽州文化品牌全案设计</div>
+        <div class="toc-list-desc">品牌策略 / 文化转译 / VI系统 / AI辅助</div>
+       </div>
+        <div class="toc-list-page">P07-09</div>
+     
+        </div>
+ <div class="toc-list-item" onclick="goToPage(9)">
+          <div class="toc-list-num">03</div>
+          <div class="toc-list-info">
+         <div class="toc-list-name">京剧IP× 东方美学包包品牌孵化</div>
+  <div class="toc-list-desc">IP商业化 / 品牌孵化 / 从0到1</div>
+          </div>
+          <div class="toc-list-page">P10-13</div>
+        </div>
+        <div class="toc-list-item" onclick="goToPage(13)">
+     <div class="toc-list-num">04</div>
+<div class="toc-list-info">
+            <div class="toc-list-name">适应新发展——Agent时代</div>
+            <div class="toc-list-desc">AI的使用实践 / 工具的分工 / </div>
+</div>
+          <div class="toc-list-page">P14-15</div>
+        </div>
+<div class="toc-list-item" onclick="goToPage(15)">
+     <div class="toc-list-num">05</div>
+<div class="toc-list-info">
+            <div class="toc-list-name">其他作品</div>
+            <div class="toc-list-desc">获奖证书 / 更多作品/ 持续成长</div>
+</div>
+          <div class="toc-list-page">P16-17</div>
+        </div>		  
+      </div>
+    </div>
+  </div>
+  <!-- ========== 项目1：洛阳文创（3页） ========== -->
+<!-- 洛阳项目第1页：市场落地性调研 + 生肖设计产出 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 02 / 03</div>
+        <div class="project-name">洛阳唐三彩生肖文创设计｜市场落地性调研</div>
+        <div class="project-tags">
+          <span class="project-tag">文创市场调研</span>
+          <span class="project-tag">非遗转化设计</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>时间</strong>：2026.04 - 2026.06</div>
+        <div><strong>角色</strong>：独立设计与市场调研</div>
+      </div>
+    </div>
+
+    <!-- 主体：左右1:1布局 左调研，右设计图，中间箭头 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0;margin-top:16px;">
+      <!-- 左侧：内置CSS调研卡片，不需要图片 -->
+      <div style="display:flex;flex-direction:column;gap:16px;flex:1;min-height:0;">
+        <!-- 模块1：文创消费用户市场 -->
+        <div style="padding:12px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;">
+          <h4 style="margin:0 0 10px 0;font-size:1em;color:var(--ink);font-weight:600;">文创消费用户市场</h4>
+          <div style="margin-bottom:10px;font-size:0.82em;color:var(--ink2);">生肖文创受众偏好度</div>
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);"><span>兔·龙·蛇</span><span>78%</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:78%;height:100%;background:var(--accent);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);"><span>鼠·牛·虎</span><span>62%</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:62%;height:100%;background:var(--accent);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);"><span>马·羊·猴</span><span>55%</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:55%;height:100%;background:var(--accent);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);"><span>鸡·狗·猪</span><span>47%</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:47%;height:100%;background:var(--accent);"></div></div>
+            </div>
+          </div>
+          <ul style="margin:10px 0 0 0;padding-left:16px;font-size:0.85em;color:var(--ink2);">
+            <li>十二生肖认知门槛低、受众广泛，适合作为本次非遗文创的核心载体</li>
+            <li>年轻人偏好盲盒、小摆件类寓意文创，匹配三彩生肖的产品形态</li>
+          </ul>
+        </div>
+
+        <!-- 模块2：洛阳市场与非遗落地调研 -->
+        <div style="padding:12px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:1;min-height:0;">
+          <h4 style="margin:0 0 10px 0;font-size:1em;color:var(--ink);font-weight:600;">洛阳市场性 & 工艺落地调研</h4>
+          <table style="width:100%;border-collapse:collapse;font-size:0.82em;color:var(--ink2);margin-bottom:10px;">
+            <tr style="border-bottom:1px solid var(--line);">
+              <td style="padding:4px 0;">汉服妆造相关企业</td>
+              <td style="text-align:right;padding:4px 0;">2,400+ 家</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line);">
+              <td style="padding:4px 0;">洛邑古城年客流量</td>
+              <td style="text-align:right;padding:4px 0;">约600万人次</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line);">
+              <td style="padding:4px 0;">妆造体验客单价</td>
+              <td style="text-align:right;padding:4px 0;">¥99–¥399</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line);">
+              <td style="padding:4px 0;">短视频话题播放量</td>
+              <td style="text-align:right;padding:4px 0;">超20亿</td>
+            </tr>
+          </table>
+          <div style="font-size:0.82em;color:var(--ink2);margin-bottom:8px;"><strong>三彩非遗工艺可行性</strong></div>
+          <table style="width:100%;border-collapse:collapse;font-size:0.82em;color:var(--ink2);">
+            <tr style="border-bottom:1px solid var(--line);">
+              <td style="padding:4px 0;">烧制温度</td>
+              <td style="text-align:right;padding:4px 0;">约1000℃</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line);">
+              <td style="padding:4px 0;">施釉手法</td>
+              <td style="text-align:right;padding:4px 0;">流釉·泼釉</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--line);">
+              <td style="padding:4px 0;">成品特点</td>
+              <td style="text-align:right;padding:4px 0;">釉色不可控、成色唯一</td>
+            </tr>
+          </table>
+          <ul style="margin:10px 0 0 0;padding-left:16px;font-size:0.85em;color:var(--ink2);">
+            <li>洛阳文旅热度高，游客基数大，具备文创产品消费市场基础</li>
+            <li>本地拥有成熟唐三彩工坊，工艺可落地，“开片随机性”为产品独特卖点</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 右侧：上下图片区域，上6 下4 比例，中间箭头 -->
+      <div style="display:flex;flex-direction:column;gap:16px;flex:1;min-height:0;position:relative;">
+        <!-- 箭头指示：调研 → 设计产出 -->
+        <div style="position:absolute;left:-36px;top:50%;transform:translateY(-50%);font-size:24px;color:var(--accent);font-weight:bold;">→</div>
+        
+        <!-- 上图6份：生肖+包装大图 -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:6 1 0px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">十二生肖形象与包装设计</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="洛阳/新的右上.jpg" alt="十二生肖设计及包装" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+
+        <!-- 下图4份：局部解析小图 -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:4 1 0px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">形象局部解析</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="洛阳/新的右下.jpg" alt="局部解析图" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    
+ 
+</div>
+
+	<!-- 5洛阳项目第2页：展板+获奖证书，三张图片横向并列 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 01 /2</div>
+        <div class="project-name">洛阳唐三彩生肖文创设计｜展板与获奖展示</div>
+        <div class="project-tags">
+          <span class="project-tag">成果展板</span>
+          <span class="project-tag">赛事获奖</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>角色</strong>：独立设计与市场调研</div>
+      </div>
+    </div>
+
+    <!-- 主体：3栏均等网格布局 -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;flex:1;min-height:0;margin-top:16px;">
+      <!-- 图1 展板1 -->
+      <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+        <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">成果展板</h4>
+        <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+          <img src="洛阳/2.jpg" alt="唐三彩生肖文创展板" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+        </div>
+      </div>
+      <!-- 图2 展板2 -->
+      <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+        <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">成果展板</h4>
+        <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+          <img src="洛阳/3.jpg" alt="唐三彩生肖文创展板" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+        </div>
+      </div>
+      <!-- 图3 获奖证书 -->
+      <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+        <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">获奖证书</h4>
+        <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+          <img src="洛阳/第20届国三.jpg" alt="项目获奖证书" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+	<!-- 6洛阳项目第3页 AI使用工作流页面，和文藏徽州AI页面版式完全一致 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 01 /3</div>
+        <div class="project-name">洛阳唐三彩生肖文创｜AI视觉创作工作流</div>
+        <div class="project-tags">
+          <span class="project-tag">AI创意构思</span>
+          <span class="project-tag">形象迭代</span>
+          <span class="project-tag">插画落地</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>角色</strong>：独立设计，AI辅助创作</div>
+      </div>
+    </div>
+
+    <!-- 整体上下布局，比例 8:2 -->
+    <div style="display:flex;flex-direction:column;gap:16px;flex:1;min-height:0;margin-top:16px;">
+      <!-- 上部分（占8份）：4列图片区域 -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:8 1 0px;min-height:0;">
+        <!-- 1 想法描述 -->
+        <!-- 2 初版生成 -->
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">初版生成</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="洛阳/AI1 (2).png" alt="初版生成" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+        <!-- 3 细化修改造型色彩 -->
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">细化修改造型</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="洛阳/AI改造型 (2).png" alt="细化修改造型色彩" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+        <!-- 4 转文创产品效果图 -->
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">转插画风格图</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="洛阳/AI转插画.png" alt="转文创产品效果图" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+      </div>
+
+      <!-- 下部分（占2份）：文字描述、AI工具，4列对齐 -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:2 1 0px;min-height:0;padding:8px;">
+      
+        <!-- 步骤2文字 -->
+        <div style="font-size:0.82em;color:var(--ink2);">
+          <div style="font-weight:bold;color:var(--ink);margin-bottom:4px;">初版生成</div>
+          <p style="margin:0;line-height:1.4;">批量生成多版生肖IP草图，快速尝试不同体态与风格，筛选基础形象方向。<br><strong>工具：</strong>豆包</p>
+        </div>
+        <!-- 步骤3文字 -->
+        <div style="font-size:0.82em;color:var(--ink2);">
+          <div style="font-weight:bold;color:var(--ink);margin-bottom:4px;">细化修改造型色彩</div>
+          <p style="margin:0;line-height:1.4;">迭代调整生肖体态，复刻三彩流动釉色，修改唐代妆造，统一整套IP风格。<br><strong>工具：</strong>豆包</p>
+        </div>
+        <!-- 步骤4文字 -->
+        <div style="font-size:0.82em;color:var(--ink2);">
+          <div style="font-weight:bold;color:var(--ink);margin-bottom:4px;">转平面插画效果</div>
+          <p style="margin:0;line-height:1.4;">将实物图转成平面插画，水墨晕染插画等风格，做延展小卡和包装设计。<br><strong>工具：</strong>豆包</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- ========== 项目2：文藏徽州（3页） ========== -->
+<!-- 7文藏徽州项目 第1页：内置调研图表 + LOGO与辅助图形 修复溢出 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 02 /1</div>
+        <div class="project-name">文藏徽州｜品牌视觉基础系统设计</div>
+        <div class="project-tags">
+          <span class="project-tag">文旅品牌VI</span>
+          <span class="project-tag">文化元素提炼</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>时间</strong>：2026.09 - 2026.10</div>
+        <div><strong>角色</strong>：独立完成 · AI辅助创作</div>
+      </div>
+    </div>
+
+    <!-- 主体左右布局1:1 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0;margin-top:16px;">
+      <!-- 左侧：上下两块【CSS原生图表，不用图片】 -->
+      <div style="display:flex;flex-direction:column;gap:20px;flex:1;min-height:0;">
+        <!-- 左上：徽州文旅消费人群画像分析（饼图） -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1 1 0px;min-height:0;padding:12px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;">
+          <h4 style="margin:0 0 8px 0;font-size:1em;color:var(--ink);font-weight:600;">徽州文旅消费人群画像分析</h4>
+          <div style="display:grid;grid-template-columns:1fr 120px;gap:12px;align-items:center;flex:1;min-height:0;">
+            <!-- 简易饼图 -->
+            <div style="width:140px;height:140px;border-radius:50%;background:conic-gradient(
+              var(--accent) 0 55%,
+              #6897bb 55% 80%,
+              #b4c8dd 80% 100%
+            );margin:0 auto;"></div>
+            <!-- 图例 -->
+            <div style="font-size:0.85em;color:var(--ink2);">
+              <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;"><span style="width:12px;height:12px;background:var(--accent);display:inline-block;"></span>青年文化游客 22–35岁 55%</div>
+              <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;"><span style="width:12px;height:12px;background:#6897bb;display:inline-block;"></span>中年研学游客 36–50岁 25%</div>
+              <div style="display:flex;gap:6px;align-items:center;"><span style="width:12px;height:12px;background:#b4c8dd;display:inline-block;"></span>老年观光游客 50岁+ 20%</div>
+            </div>
+          </div>
+          <ul style="margin:8px 0 0 0;padding-left:16px;font-size:0.85em;color:var(--ink2);">
+            <li>核心目标客群为22–35岁青年，品牌视觉兼顾传统底蕴+现代简约审美</li>
+            <li>用户偏好低复杂度、识别清晰的符号，拒绝堆砌繁复徽州元素</li>
+          </ul>
+        </div>
+
+        <!-- 左下：徽州文化视觉元素筛选&权重分析（横向条形打分图） -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1 1 0px;min-height:0;padding:12px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;">
+          <h4 style="margin:0 0 8px 0;font-size:1em;color:var(--ink);font-weight:600;">徽州文化视觉元素筛选&权重分析</h4>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);margin-bottom:2px;"><span>马头墙轮廓</span><span>92分</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:92%;height:100%;background:var(--accent);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);margin-bottom:2px;"><span>白墙黛瓦</span><span>86分</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:86%;height:100%;background:var(--accent);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);margin-bottom:2px;"><span>砖雕纹样</span><span>78分</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:78%;height:100%;background:var(--accent);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);margin-bottom:2px;"><span>徽墨歙砚</span><span>65分</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:65%;height:100%;background:var(--accent);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82em;color:var(--ink2);margin-bottom:2px;"><span>牌坊木雕</span><span>51分</span></div>
+              <div style="width:100%;height:8px;background:var(--line);border-radius:4px;overflow:hidden;"><div style="width:51%;height:100%;background:var(--accent);"></div></div>
+            </div>
+          </div>
+          <ul style="margin:8px 0 0 0;padding-left:16px;font-size:0.85em;color:var(--ink2);">
+            <li>主LOGO提取马头墙轮廓作为核心识别符号，做极简现代化简化</li>
+            <li>砖雕纹样提炼重组，作为品牌辅助图形系统</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 右侧：上下两张设计成果，带箭头，上LOGO，下辅助纹样 -->
+      <div style="display:flex;flex-direction:column;gap:20px;flex:1;min-height:0;">
+        <!-- 右上：品牌标志LOGO（横版） -->
+        <div style="display:flex;align-items:center;gap:14px;flex:1.1 1 0px;min-height:0;">
+          <div style="flex:0 0 auto;font-size:22px;color:var(--accent);font-weight:bold;">→</div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;padding:8px;overflow:hidden;">
+            <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">品牌标志LOGO（横版）</h4>
+            <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+              <img src="徽州/P1右上jpg.jpg" alt="文藏徽州横版品牌LOGO" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+            </div>
+          </div>
+        </div>
+
+        <!-- 右下：辅助图形纹样，锁定图片最大高度，防止溢出 -->
+        <div style="display:flex;align-items:center;gap:14px;flex:0.9 1 0px;min-height:0;overflow:hidden;">
+          <div style="flex:0 0 auto;font-size:22px;color:var(--accent);font-weight:bold;">→</div>
+          <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;padding:8px;overflow:hidden;">
+            <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">辅助图形纹样</h4>
+            <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+              <img src="徽州/P1右下.jpg" alt="文藏徽州辅助图形纹样" style="max-width:100%;max-height:220px;object-fit:contain;display:block;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8文藏徽州项目 第2页：海报展示与应用展示 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 02 /2</div>
+        <div class="project-name">文藏徽州｜品牌视觉应用展示</div>
+        <div class="project-tags">
+          <span class="project-tag">海报设计</span>
+          <span class="project-tag">应用展示</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>角色</strong>：独立完成 · AI辅助创作</div>
+      </div>
+    </div>
+
+    <!-- 主体左右布局 1:1 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0;margin-top:16px;">
+      
+      <!-- 左侧：竖版展板大图 -->
+      <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+        <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">海报展示</h4>
+        <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+          <img src="徽州/品牌全案.jpg" alt="文藏徽州竖版展板" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+        </div>
+      </div>
+
+      <!-- 右侧：上下两张横版图，等大 -->
+      <div style="display:flex;flex-direction:column;gap:20px;flex:1;min-height:0;">
+        
+        <!-- 右上：横版图1 -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1 1 0px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">应用展示</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="徽州/徽州应用系统 (2).jpg" alt="文藏徽州应用展示1" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+
+        <!-- 右下：横版图2 -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1 1 0px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">应用展示</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="徽州/徽州应用系统 (4).jpg" alt="文藏徽州应用展示2" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+	
+<!-- 9第3页 AI使用流程图页面，8:2上下分区，上8为4列图片，下2为配套说明文本 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 02 /3</div>
+        <div class="project-name">AI视觉设计工作流</div>
+        <div class="project-tags">
+          <span class="project-tag">AI创意发散</span>
+          <span class="project-tag">迭代优化</span>
+          <span class="project-tag">排版辅助</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>角色</strong>：自主研究，AI辅助创作</div>
+      </div>
+    </div>
+
+    <!-- 整体上下布局，比例 8:2 -->
+    <div style="display:flex;flex-direction:column;gap:16px;flex:1;min-height:0;margin-top:16px;">
+      <!-- 上部分（占8份）：4列图片区域 -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;flex:8 1 0px;min-height:0;">
+        <!-- 1 AI辅助思维发散 -->
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">AI辅助思维发散</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="徽州/AI思维发散.png" alt="AI辅助思维发散" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+        <!-- 2 AI辅助确认初稿 -->
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">AI辅助确认初稿</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="徽州/AI2确认方案.png" alt="AI辅助确认初稿" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+        <!-- 3 改色修改 -->
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">改色修改</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="徽州/改色.jpg" alt="改色修改" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+        <!-- 4 手册排版建议 -->
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0;padding:8px;overflow:hidden;">
+          <h4 style="margin:0;font-size:0.95em;color:var(--ink);font-weight:600;text-align:center;">手册排版建议</h4>
+          <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img  src="徽州/手册排版.jpg" alt="手册排版建议" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+      </div>
+
+      <!-- 下部分（占2份）：文字描述、AI工具，4列对齐 -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;flex:2 1 0px;min-height:0;padding:8px;">
+        <!-- 步骤1文字 -->
+        <div style="font-size:0.82em;color:var(--ink2);">
+          <div style="font-weight:bold;color:var(--ink);margin-bottom:4px;">AI辅助思维发散</div>
+          <p style="margin:0;line-height:1.4;">输入项目背景与设计目标，AI快速产出多方向创意关键词、概念草图，拓宽设计思路。<br><strong>工具</strong>Gemini</p>
+        </div>
+        <!-- 步骤2文字 -->
+        <div style="font-size:0.82em;color:var(--ink2);">
+          <div style="font-weight:bold;color:var(--ink);margin-bottom:4px;">AI辅助确认初稿</div>
+          <p style="margin:0;line-height:1.4;">把构思转化为可视化初稿，快速验证构图、版式、造型可行性，筛选最优方向。<br><strong>工具：</strong>Gemini</p>
+        </div>
+        <!-- 步骤3文字 -->
+        <div style="font-size:0.82em;color:var(--ink2);">
+          <div style="font-weight:bold;color:var(--ink);margin-bottom:4px;">改色修改</div>
+          <p style="margin:0;line-height:1.4;">批量生成多套配色方案，调整色调、明度，快速对比色彩风格，锁定品牌色。<br><strong>工具：</strong>Chatgpt</p>
+        </div>
+        <!-- 步骤4文字 -->
+        <div style="font-size:0.82em;color:var(--ink2);">
+          <div style="font-weight:bold;color:var(--ink);margin-bottom:4px;">手册排版建议</div>
+          <p style="margin:0;line-height:1.4;">输入内容框架，AI输出版式结构、文字层级、图文布局方案，辅助VI手册排版。<br><strong>工具：</strong>Gemini</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+	
+	 <!-- ========== 项目3：京剧x品牌包包设计 4========== -->
+	
+<!-- 10【第1页】调研推演｜IP落地载体：包挂衍生品 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 03 /1</div>
+        <div class="project-name">调研推演 · IP落地载体：包挂衍生品</div>
+        <div class="project-tags">
+          <span class="project-tag">市场调研</span>
+          <span class="project-tag">载体选择</span>
+          <span class="project-tag">IP衍生品</span>
+        </div>
+      </div>
+      <div class="project-meta">
+		          <div><strong>时间</strong>：2026.08 - 2025.09</div>
+      </div>
+    </div>
+
+    <!-- 整体左右分栏：左调研，右设计输出 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0;align-items:stretch;">
+
+      <!-- 左侧：两张调研大图 -->
+      <div style="display:flex;flex-direction:column;gap:20px;min-height:0;">
+
+        <!-- 调研图1：年轻消费倾向 -->
+        <!-- 图1 横向条形图：年轻国风文创消费倾向 -->
+<div style="flex:1 1 0px;min-height:0;padding:14px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:auto;">
+  <div style="font-weight:bold;font-size:15px;color:var(--ink);margin-bottom:16px;">2025 年轻群体国风文创消费倾向<br><span style="font-weight:normal;font-size:12px;color:var(--ink2)">样本：18–30岁，n=216｜分值0~10分，越高购买意愿越强</span></div>
+
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <!-- 条目 -->
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>可穿戴小配饰（包挂、胸针）</span><span>8.2</span>
+      </div>
+      <div style="height:14px;background:var(--line);border-radius:7px;overflow:hidden;">
+        <div style="width:82%;height:100%;background:var(--accent);border-radius:7px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>海报插画印刷品</span><span>5.8</span>
+      </div>
+      <div style="height:14px;background:var(--line);border-radius:7px;overflow:hidden;">
+        <div style="width:58%;height:100%;background:var(--accent);border-radius:7px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>文具类（书签/笔记本）</span><span>6.7</span>
+      </div>
+      <div style="height:14px;background:var(--line);border-radius:7px;overflow:hidden;">
+        <div style="width:67%;height:100%;background:var(--accent);border-radius:7px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>盲盒摆件手办</span><span>5.3</span>
+      </div>
+      <div style="height:14px;background:var(--line);border-radius:7px;overflow:hidden;">
+        <div style="width:53%;height:100%;background:var(--accent);border-radius:7px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>服饰成衣</span><span>4.5</span>
+      </div>
+      <div style="height:14px;background:var(--line);border-radius:7px;overflow:hidden;">
+        <div style="width:45%;height:100%;background:var(--accent);border-radius:7px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>大型装饰艺术品</span><span>3.1</span>
+      </div>
+      <div style="height:14px;background:var(--line);border-radius:7px;overflow:hidden;">
+        <div style="width:31%;height:100%;background:var(--accent);border-radius:7px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+        <!-- 调研图2：文创种类销售占比 -->
+       <!-- 图2 饼图：国风文创线上销售品类占比 -->
+<div style="flex:1 1 0;min-height:0;padding:18px;background:#fff;border:1px solid var(--line);border-radius:8px;">
+  <div style="font-weight:bold;font-size:15px;color:var(--ink);margin-bottom:16px;">国风文创线上销售品类占比<br><span style="font-weight:normal;font-size:12px;color:var(--ink2)">线上电商销售数据</span></div>
+  <div style="display:flex;align-items:center;gap:24px;">
+    <!-- CSS饼图容器 -->
+    <div style="width:160px;height:160px;border-radius:50%;background:conic-gradient(
+      var(--accent) 0 38%,
+      #5b8cb8 38% 60%,
+      #84a8c8 60% 78%,
+      #a3bdd4 78% 90%,
+      #b9cad8 90% 96%,
+      #d0dbe4 96% 100%
+    );flex-shrink:0;"></div>
+    <!-- 图例 -->
+    <div style="font-size:13px;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:var(--accent);display:inline-block;"></span>包挂/钥匙挂饰 38%</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:#5b8cb8;display:inline-block;"></span>冰箱贴 22%</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:#84a8c8;display:inline-block;"></span>书签/文具 18%</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:#a3bdd4;display:inline-block;"></span>盲盒手办 12%</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:#b9cad8;display:inline-block;"></span>海报画片 6%</div>
+      <div style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:#d0dbe4;display:inline-block;"></span>其他 4%</div>
+    </div>
+  </div>
+</div>
+
+
+      </div>
+
+      <!-- 右侧：两张设计输出大图，每张都带箭头对应 -->
+      <div style="display:flex;flex-direction:column;gap:20px;min-height:0;">
+
+        <!-- 第一组：调研 → 包挂设计方向1 -->
+        <div style="display:flex;align-items:center;gap:14px;flex:1 1 0;min-height:0;">
+          <div style="flex:0 0 auto;font-size:22px;color:var(--accent);font-weight:bold;">→</div>
+          <div class="img-placeholder" style="flex:1;min-height:0;">
+            <img src="乌盆记/pageoneIP形象设计.jpg" alt="乌盆记IP包挂设计方向1" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+
+        <!-- 第二组：调研 → 包挂设计方向2 -->
+        <div style="display:flex;align-items:center;gap:14px;flex:1 1 0;min-height:0;">
+          <div style="flex:0 0 auto;font-size:22px;color:var(--accent);font-weight:bold;">→</div>
+          <div class="img-placeholder" style="flex:1;min-height:0;">
+            <img src="乌盆记/IP衍生插画.jpg" alt="IP衍生设计" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 底部结论条，强化“调研决定设计” -->
+    <div class="derive-conclusion" style="margin-top:20px;">
+      <div class="dc-label">调研结论 · 设计决策</div>
+      <div class="dc-text">
+        年轻用户更偏好日常可佩戴、低价格文创，包挂具备低门槛、强社交属性，因此我将它作为乌盆记IP初次落地的首选载体。
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- 11京剧乌盆记项目 第2页：IP设计及应用展示（图上加标题） -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 03 /2</div>
+        <div class="project-name">IP形象设计与视觉应用展示</div>
+        <div class="project-tags">
+          <span class="project-tag">IP角色创作</span>
+          <span class="project-tag">视觉延展应用</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>角色</strong>：独立设计，AI辅助创作</div>
+      </div>
+    </div>
+
+    <!-- 主体左右布局 1:1 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-height:0;margin-top:8px;">
+      <!-- 左侧：竖版展板大图 + 标题 -->
+      <div style="display:flex;flex-direction:column;gap:4px;min-height:0;padding:4px;overflow:hidden;">
+        <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">IP主形象竖版展板</h4>
+        <div style="flex:1;min-height:0;">
+          <img src="乌盆记/展板 (1).jpg" alt="乌盆记IP竖版展板" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+        </div>
+      </div>
+
+      <!-- 右侧：上下两张图，上6 下4，各自带标题 -->
+      <div style="display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;">
+        <!-- 右上：IP衍生京剧角色设计（占6份） -->
+        <div style="display:flex;flex-direction:column;gap:4px;flex:6 1 0px;min-height:0;padding:4px;overflow:hidden;">
+          <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">IP衍生京剧角色设计</h4>
+          <div style="flex:1;min-height:0;">
+            <img src="乌盆记/IP衍生（生旦净丑）.jpg" alt="IP衍生京剧角色设计" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+        <!-- 右下：产品应用展示图（占4份） -->
+        <div style="display:flex;flex-direction:column;gap:4px;flex:4 1 0px;min-height:0;padding:4px;overflow:hidden;">
+          <h4 style="margin:0;font-size:1em;color:var(--ink);font-weight:600;">IP产品应用展示</h4>
+          <div style="flex:1;min-height:0;">
+            <img src="乌盆记/pageoneIP文创香薰.jpg" alt="IP产品应用展示" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 12【第3页】品牌构想｜从IP包挂到境 JING 手袋品牌 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 03 /3</div>
+        <div class="project-name">品牌构想 · 从IP包挂到「境 JING」手袋</div>
+        <div class="project-tags">
+          <span class="project-tag">市场推演</span>
+          <span class="project-tag">品牌定位</span>
+          <span class="project-tag">东方手袋</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>品牌</strong>：境 JING 东方美学手袋</div>
+      </div>
+    </div>
+
+    <!-- 整体左右分栏：左调研，右品牌输出 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0;align-items:stretch;">
+
+      <!-- 左侧：两张调研/结论大图 -->
+      <div style="display:flex;flex-direction:column;gap:20px;min-height:0;">
+
+        <!-- 调研图1：手袋市场与文化载体机会 -->
+        <!-- 第2页左上图：东西方奢侈品热门品类市场规模对比 -->
+<div style="flex:1 1 0px;min-height:0;padding:14px;background:#fff;border:1px solid var(--line);border-radius:8px;">
+  <div style="font-weight:bold;font-size:14px;color:var(--ink);margin-bottom:12px;">东西方奢侈品热门品类市场规模对比<br><span style="font-weight:normal;font-size:11px;color:var(--ink2)">全球奢侈品市场，相对规模指数0-100</span></div>
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+        <span>手袋</span><span>86</span>
+      </div>
+      <div style="height:12px;background:var(--line);border-radius:6px;overflow:hidden;">
+        <div style="width:86%;height:100%;background:var(--accent);border-radius:6px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+        <span>成衣服饰</span><span>72</span>
+      </div>
+      <div style="height:12px;background:var(--line);border-radius:6px;overflow:hidden;">
+        <div style="width:72%;height:100%;background:var(--accent);border-radius:6px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+        <span>鞋履</span><span>55</span>
+      </div>
+      <div style="height:12px;background:var(--line);border-radius:6px;overflow:hidden;">
+        <div style="width:55%;height:100%;background:var(--accent);border-radius:6px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+        <span>珠宝饰品</span><span>64</span>
+      </div>
+      <div style="height:12px;background:var(--line);border-radius:6px;overflow:hidden;">
+        <div style="width:64%;height:100%;background:var(--accent);border-radius:6px;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+        <span>香水护肤品</span><span>48</span>
+      </div>
+      <div style="height:12px;background:var(--line);border-radius:6px;overflow:hidden;">
+        <div style="width:48%;height:100%;background:var(--accent);border-radius:6px;"></div>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+
+
+
+        <!-- 调研图2：品牌定位逻辑 / 对标研究 -->
+        <!-- 第2页左下图：目标客群手袋消费调研｜价位区间+材质偏好 -->
+<div style="flex:1 1 0px;min-height:0;padding:14px;background:#fff;border:1px solid var(--line);border-radius:8px;">
+  <div style="font-weight:bold;font-size:14px;color:var(--ink);margin-bottom:12px;">20–35岁都市女性手袋消费调研<br><span style="font-weight:normal;font-size:11px;color:var(--ink2)">样本n=179，国风审美爱好者</span></div>
+  <!-- 价位部分 -->
+  <div style="margin-bottom:12px;">
+    <div style="font-size:12px;margin-bottom:6px;">可接受购买价位区间</div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span>3000–8000元（中高端轻奢）</span><span>41%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span>1000–3000元</span><span>34%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span>8000元以上高奢</span><span>15%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span>1000元以内</span><span>10%</span>
+      </div>
+    </div>
+  </div>
+  <!-- 材质偏好 -->
+  <div>
+    <div style="font-size:12px;margin-bottom:6px;">材质偏好排序</div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span>环保植鞣人造皮革</span><span>⭐首选，46%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span>天然真皮</span><span>31%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span>织物/香云纱拼接</span><span>18%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;">
+        <span>PVC塑料</span><span>5%</span>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
+
+      </div>
+
+      <!-- 右侧：两张品牌视觉输出大图 -->
+      <div style="display:flex;flex-direction:column;gap:20px;min-height:0;">
+
+        <!-- 第一组：市场机会 → 品牌Logo -->
+        <div style="display:flex;align-items:center;gap:14px;flex:1 1 0;min-height:0;">
+          <div style="flex:0 0 auto;font-size:22px;color:var(--accent);font-weight:bold;">→</div>
+          <div class="img-placeholder" style="flex:1;min-height:0;">
+            <img src="乌盆记/品牌.jpg" alt="境 JING 品牌Logo设计">
+          </div>
+        </div>
+
+        <!-- 第二组：品牌定位 → 衍生周边 -->
+        <div style="display:flex;align-items:center;gap:14px;flex:1 1 0;min-height:0;">
+          <div style="flex:0 0 auto;font-size:22px;color:var(--accent);font-weight:bold;">→</div>
+          <div class="img-placeholder" style="flex:1;min-height:0;">
+            <img src="乌盆记/品牌的 (2).jpg" alt="境 JING 品牌京剧系列包装设计">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 底部结论条 -->
+    <div class="derive-conclusion alt" style="margin-top:20px;">
+      <div class="dc-label">品牌推演逻辑</div>
+      <div class="dc-text">
+        手袋是高频、强展示的文化载体，西方奢侈包品牌成熟但戏曲主题国产手袋稀缺，因此我以乌盆记IP为起点，构建「境 JING」东方戏曲手袋品牌。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 13京剧乌盆记项目 第4页：品牌定位 + 包款&包装延展 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 03 /4</div>
+        <div class="project-name">「境JING」东方美学包饰 · 品牌定位与视觉延展</div>
+        <div class="project-tags">
+          <span class="project-tag">品牌定位</span>
+          <span class="project-tag">产品构想</span>
+          <span class="project-tag">包装延展设计</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>角色</strong>：独立设计，AI辅助创作</div>
+      </div>
+    </div>
+
+    <!-- 主体：上下布局 4:6 -->
+    <div style="display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;margin-top:10px;">
+      <!-- 上方区域 占4份：品牌定位表 -->
+      <div style="flex:4 1 0px;min-height:0;padding:8px;background:#fff;border:1px solid var(--line);border-radius:8px;">
+        <!-- 这里保留你原来的品牌定位表内容，直接粘贴在这个div内部 -->
+        <div>
+          <!-- ==========【把你之前写的品牌定位表格代码粘贴在这里】========== -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+      <table class="transform-table" style="font-size:13px;">
+        <tr>
+          <th style="width:18%;">品牌定位</th>
+        </tr>
+        <tr>
+          <td>品牌名称</td>
+          <td>境 JING｜以戏曲叙事为内核的东方美学手袋品牌</td>
+        </tr>
+        <tr>
+          <td>受众群体</td>
+          <td>20–35岁，追求文化叙事、独立审美的都市女性</td>
+        </tr>
+        <tr>
+          <td>主推材质</td>
+          <td>环保植鞣摔纹人造皮革、香云纱拼接；兼顾质感、可持续理念与日常通勤耐用性</td>
+        </tr>
+        <tr>
+          <td>产品定位</td>
+          <td>可日常使用的东方戏曲美学手袋，不做传统文创摆件，而是强调“文化可穿戴”</td>
+        </tr>
+        <tr>
+          <td>品牌关键词</td>
+          <td>戏曲叙事｜东方轻奢｜日常通勤｜文化可穿戴</td>
+        </tr>
+        <tr>
+          <td>品牌Slogan</td>
+          <td>入戏于形，入境于物</td>
+        </tr>
+      </table>
+    </div>
+        </div>
+      </div>
+
+      <!-- 下方区域 占6份：左右两张图 -->
+		      <div style="font-size:14px;font-weight:500;color:var(--ink);">品牌包包设计与品牌包装衍生品</div>
+      <div style="flex:6 1 0px;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <!-- 图1：构想包包设计图 -->
+        <div class="img-placeholder" style="min-height:0;padding:8px;overflow:hidden;">
+          <img src="乌盆记/包.jpg" alt="境JING 包款构想设计" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+        </div>
+		  
+        <!-- 图2：品牌延展包装设计图 -->
+        <div class="img-placeholder" style="min-height:0;padding:8px;overflow:hidden;">
+          <img src="乌盆记/品牌2.jpg" alt="品牌包装视觉延展" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+	
+	<!-- ========== 项目4：Agent  2 ========== -->
+<!-- 14AI专题 · 第1页：AI 使用实践展示 -->
+<div class="page project-page">
+  <div class="page-content">
+    <div class="project-header">
+      <div>
+        <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 04 / 01</div>
+        <div class="project-name">AI 使用实践展示</div>
+        <div class="project-tags">
+          <span class="project-tag">Prompt迭代</span>
+          <span class="project-tag">自定义Skill</span>
+          <span class="project-tag">创意发散</span>
+        </div>
+      </div>
+      <div class="project-meta">
+        <div><strong>时间</strong>：2026.04 - 至今</div>
+        <div><strong>角色</strong>：自主实践</div>
+      </div>
+    </div>
+
+    <div class="work-gallery">
+<div class="wg-item">
+  <div class="wg-figure" style="flex:0 0 76%;">
+    <img src="Agent/skill图.jpg" alt="Prompt迭代与自定义Skill过程截图">
+  </div>
+  <div class="wg-caption">
+    <div class="wg-name" style="font-size:13px;">Prompt迭代 & 自定义Skill沉淀</div>
+    <div class="wg-desc" style="font-size:10.5px;line-height:1.6;">通过多轮调试、筛选、优化提示词，沉淀适配自己项目的专属Prompt，封装为可复用的自定义Skill，提升系列视觉产出的一致性与效率。</div>
+  </div>
+</div>
+
+<div class="wg-item">
+  <div class="wg-figure" style="flex:0 0 76%;">
+    <img src="Agent/思维.jpg" alt="设计前期思维发散过程截图">
+  </div>
+  <div class="wg-caption">
+    <div class="wg-name" style="font-size:13px;">设计前期创意思维发散</div>
+    <div class="wg-desc" style="font-size:10.5px;line-height:1.6;">借助AI在项目前期做多方向视觉与概念发散，拓展设计可能性；创意方向、审美决策权始终由我把握，AI作为辅助工具。</div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 15AI专题 · 第2页：工具与能力图谱【字号放大宽松版】 -->
+<div class="page project-page layout-rebalance page-ai">
+  <div class="page-content">
+    <div class="mind-header">
+      <div class="mind-title">工具与能力图谱</div>
+      <div class="mind-sub" style="font-weight:bold; font-size:1.15em;">PROJECT 04 / 02 · 工具分类 · 使用场景 · 能力边界</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px;flex:1;min-height:0;">
+
+      <div class="research-card">
+        <div class="rc-label" style="font-size:18px;">图像生成类</div>
+        <div class="rc-text">
+          <ul class="ai-list" style="gap:8px;font-size:18px;">
+            <li><b>ChatGPT</b>：文生图，视觉概念快速生成</li>
+            <li><b>Mindvedio</b>：图生图，基于草图迭代风格效果</li>
+            <li><b>即梦</b>：图生图，IP形象、包装视觉方案探索</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-label" style="font-size:18px;">文本思维类</div>
+        <div class="rc-text">
+          <ul class="ai-list" style="gap:8px;font-size:18px;">
+            <li><b>Gemini</b>：设计方案思维扩散，拓展选题角度</li>
+            <li><b>ChatGPT</b>：展板版式布局建议，产出文案初稿</li>
+            <li><b>豆包</b>：梳理设计思路，对方案文本进行修改润色</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="research-card">
+        <div class="rc-label" style="font-size:18px;">Agent任务流类</div>
+        <div class="rc-text">
+          <ul class="ai-list" style="gap:8px;font-size:18px;">
+            <li><b>WorkBuddy</b>：文档批量处理、素材整理归类</li>
+            <li><b>TraeWorkCN</b>：智能化修改文档，简单代码辅助工作</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="derive-flow compact" style="margin-top:24px;">
+      <div class="derive-step">
+        <div class="ds-num">01</div>
+        <div class="ds-name" style="font-size:14px;">需求拆解</div>
+        <div class="ds-desc" style="font-size:12px;">明确目标与约束</div>
+      </div>
+      <div class="derive-step">
+        <div class="ds-num">02</div>
+        <div class="ds-name" style="font-size:14px;">AI发散</div>
+        <div class="ds-desc" style="font-size:12px;">多方案快速探索</div>
+      </div>
+      <div class="derive-step">
+        <div class="ds-num">03</div>
+        <div class="ds-name" style="font-size:14px;">人工筛选修正</div>
+        <div class="ds-desc" style="font-size:12px;">设计师把控调性</div>
+      </div>
+      <div class="derive-step">
+        <div class="ds-num">04</div>
+        <div class="ds-name" style="font-size:14px;">沉淀复用</div>
+        <div class="ds-desc" style="font-size:12px;">固化提示词与Skill</div>
+      </div>
+    </div>
+
+    <div class="derive-conclusion alt" style="margin-top:18px;">
+      <div class="dc-label">核心认知</div>
+      <div class="dc-text" style="font-size:18px;">AI放大执行力，而不是判断力，创意决策权始终归属于设计师。</div>
+    </div>
+  </div>
+</div>
+	
+<!-- ========== 更多 ========== -->
+<!-- 16第页：获奖证书 -->
+  <div class="page project-page">
+    <div class="page-content">
+      <div class="more-title">获奖作品证书</div>
+      <div class="more-subtitle">HONORS · 参赛</div>
+    <div class="work-gallery">
+
+        <div class="wg-item">
+          <div class="wg-figure" style="flex:0 0 76%;">
+        <img src="更多/第19届国优.jpg" alt="中国好创意国家优秀奖证书">
+          </div>
+          <div class="wg-caption" >
+      
+   
+        <div class="wg-name" >「印象上海」文旅插画</div>
+              <div class="wg-desc">中国好创意 · 国家优秀奖 · 文旅IP</div>
+      
+    </div>
+   </div>
+
+ <div class="wg-item">
+          <div class="wg-figure" style="flex:0 0 76%;">
+       <img src="更多/东方省铜.png" alt="东方创意之星省铜奖证书">
+          </div>
+          <div class="wg-caption">
+ 
+              <div class="wg-name">中国传统乐器信息可视化</div>
+      <div class="wg-desc">东方创意之星 · 省铜奖 · VR效果设计</div>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+	
+<!--17 第页：更多作品 -->
+  <div class="page more-page">
+    <div class="page-content">
+      <div class="more-title">更多作品</div>
+      <div class="more-subtitle">OTHER WORKS · 持续探索，不断成长</div>
+   <div class="honor-list three">
+
+        <div class="honor-item">
+      <div class="honor-figure">
+          <img src="更多/03.jpg" alt="敦煌纹样宠物用品设计">
+          </div>
+          <div class="honor-caption">
+            <div class="cap-rank">01</div>
+    <div class="cap-text">
+        <div class="cap-name">对宠物经济的洞察</div>
+    <div class="cap-tag">敦煌纹样宠物用品设计</div>
+         </div>
+</div>
+        </div>
+
+        <div class="honor-item alt">
+          <div class="honor-figure">
+            <img src="更多/2.jpg" alt="大广赛彩票IP设计">
+          </div>
+          <div class="honor-caption">
+            <div class="cap-rank">02</div>
+  <div class="cap-text">
+     <div class="cap-name">进一步对AI工具做IP全案的熟悉</div>
+ <div class="cap-tag">大广赛 · 彩票 IP 设计</div>
+            </div>
+   </div>
+     </div>
+
+    <div class="honor-item">
+          <div class="honor-figure">
+            <img src="更多/婚礼电商.jpg" alt="宋代婚庆产品设计">
+          </div>
+          <div class="honor-caption">
+            <div class="cap-rank">03</div>
+    <div class="cap-text">
+              <div class="cap-name">电商海报·营销方向的应用</div>
+              <div class="cap-tag">宋代婚庆产品设计</div>
+    </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- 18第页：封底 -->
+  <div class="page end-page">
+    <div class="end-content">
+      <div class="end-thanks">THANKS</div>
+      <div class="end-divider"></div>
+      <div class="end-name">琚泽云</div>
+   <div class="end-contact">
+        <p>电话：19712919126</p>
+        <p>邮箱：19712919126@163.com</p>
+        <p>意向城市：深圳 / 上海 / 广州 </p>
+   </div>
+    </div>
+  </div>
+
+	</div>
+
+<script>
+  let currentPage = 0;
+ 
+
+  const totalPages = document.querySelectorAll('.page').length;
+  const container = document.getElementById('portfolio');
+
+  document.getElementById('totalPages').textContent = totalPages;
+
+  function updatePage() {
+    container.style.transform = `translateX(-${currentPage * 100}vw)`;
+    document.getElementById('currentPage').textContent = currentPage + 1;
+
+    document.querySelectorAll('.toc-item').forEach((item) => {
+      item.classList.remove('active');
+    });
+
+    // 与实际页序对应：0 封面 / 1 关于我 / 2 目录 / 3 洛阳 / 7 徽州 / 1 乌盆记 / 14 AI
+    const tocMap = [0, 1, 2, 3, 3, 3,  6, 6, 6, 9, 9, 9, 9, 13,13, 15];
+    const tocIndex = tocMap[currentPage] !== undefined ? tocMap[currentPage] : 0;
+
+    const tocItems = document.querySelectorAll('.toc-item');
+    let closest = 0;
+    for (let i = 0; i < tocItems.length; i++) {
+      const pageNum = [0, 1, 2, 3, 6, 9, 13, 15,][i];
+      if (pageNum !== undefined && pageNum <= currentPage) closest = i;
+    }
+    if (tocItems[closest]) tocItems[closest].classList.add('active');
+  }
+
+  function nextPage() {
+    if (currentPage < totalPages - 1) {
+      currentPage++;
+      updatePage();
+    }
+  }
+
+  function prevPage() {
+    if (currentPage > 0) {
+      currentPage--;
+      updatePage();
+    }
+  }
+
+  function goToPage(page) {
+    if (page > totalPages - 1) page = totalPages - 1;
+    currentPage = page;
+    updatePage();
+    toggleToc();
+  }
+
+  function toggleToc() {
+    const panel = document.getElementById('tocPanel');
+    panel.classList.toggle('open');
+  }
+
+  // 键盘导航
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      nextPage();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevPage();
+    } else if (e.key === 'Escape') {
+      const panel = document.getElementById('tocPanel');
+      if (panel.classList.contains('open')) {
+        toggleToc();
+      }
+    }
+  });
+
+  // 触摸滑动导航
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  document.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        nextPage();
+      } else {
+        prevPage();
+      }
+    }
+  }
+
+  // 鼠标滚轮导航（节流）
+  let wheelTimer = null;
+  document.addEventListener('wheel', (e) => {
+    if (wheelTimer) return;
+    wheelTimer = setTimeout(() => { wheelTimer = null; }, 800);
+
+    if (e.deltaY > 0) {
+      nextPage();
+    } else {
+      prevPage();
+    }
+  });
+</script>
+
+</body>
+</html>
