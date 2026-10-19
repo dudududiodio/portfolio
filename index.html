@@ -2666,6 +2666,31 @@ top: 8px;
 
 
 </style>
+
+<style>
+/* ===== AI 效率对照版块 ===== */
+.eff-wrap { display:flex; flex-direction:column; gap:16px; flex:1; min-height:0; }
+.eff-table { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface);
+             border:0.5px solid var(--line); border-radius:12px; overflow:hidden; }
+.eff-table th { text-align:left; font-size:11px; letter-spacing:1.5px; color:var(--ink3);
+                font-weight:600; padding:12px 16px; border-bottom:1px solid var(--line2); }
+.eff-table td { padding:13px 16px; border-bottom:0.5px solid var(--line); color:var(--ink2); }
+.eff-table tbody tr:last-child td { border-bottom:none; }
+.eff-stage { font-weight:600; color:var(--ink); width:26%; }
+.eff-ai { color:var(--accent); font-weight:700; white-space:nowrap; }
+.eff-out { color:var(--ink3); }
+.eff-total td { background:var(--accent-soft); font-weight:700; color:var(--ink); }
+.eff-note { font-size:12px; color:var(--ink3); line-height:1.75; }
+.eff-note p { margin:0 0 2px; }
+.eff-note b { color:var(--ink2); font-weight:600; }
+.eff-shots { display:flex; gap:14px; flex:1; min-height:0; }
+.eff-shots figure { flex:1; min-width:0; min-height:0; display:flex; flex-direction:column;
+                    background:var(--surface); border:0.5px solid var(--line);
+                    border-radius:12px; overflow:hidden; }
+.eff-shots img { flex:1; min-height:0; width:100%; object-fit:contain; background:var(--bg); padding:8px; }
+.eff-shots figcaption { font-size:11px; color:var(--ink3); padding:8px 12px; border-top:0.5px solid var(--line); }
+</style>
+
 </head>
 <body>
 
@@ -2742,7 +2767,7 @@ top: 8px;
     <div class="cover-content">
       <div class="cover-label">BRAND PORTFOLIO</div>
     <div class="cover-name">琚泽云</div>
-      <div class="cover-title">2027 校招作品集｜REDesign AI视觉效果设计师</div>
+      <div class="cover-title">2027 校招作品集｜视觉设计师（AIGC 创意方向）</div>
       <div class="cover-divider"></div>
       <div class="cover-subtitle" style="font-weight:bold; font-size:1.15em;">
    用设计思维结合实际市场，做可落地的设计与传播<br>
@@ -3757,46 +3782,53 @@ top: 8px;
 
 	
 	<!-- ========== 项目4：Agent  2 ========== -->
-<!-- 14AI专题 · 第1页：AI 使用实践展示 -->
+<!-- 14AI专题 · 第1页：AI 工作流 · 效率对照 -->
 <div class="page project-page">
   <div class="page-content">
     <div class="project-header">
       <div>
         <div class="project-num" style="font-weight:bold; font-size:1.15em;">PROJECT 04 / 01</div>
-        <div class="project-name">AI 使用实践展示</div>
+        <div class="project-name">AI 工作流 · 效率对照</div>
         <div class="project-tags">
+          <span class="project-tag">效率对照</span>
           <span class="project-tag">Prompt迭代</span>
           <span class="project-tag">自定义Skill</span>
-          <span class="project-tag">创意发散</span>
         </div>
       </div>
       <div class="project-meta">
-        <div><strong>时间</strong>：2026.04 - 至今</div>
-        <div><strong>角色</strong>：自主实践</div>
+        <div><strong>时间</strong>：2026.04 - 2026.06</div>
+        <div><strong>角色</strong>：独立设计 · AI辅助创作</div>
       </div>
     </div>
 
-    <div class="work-gallery">
-<div class="wg-item">
-  <div class="wg-figure" style="flex:0 0 76%;">
-    <img src="Agent/skill图.jpg" alt="Prompt迭代与自定义Skill过程截图">
-  </div>
-  <div class="wg-caption">
-    <div class="wg-name" style="font-size:13px;">Prompt迭代 & 自定义Skill沉淀</div>
-    <div class="wg-desc" style="font-size:10.5px;line-height:1.6;">通过多轮调试、筛选、优化提示词，沉淀适配自己项目的专属Prompt，封装为可复用的自定义Skill，提升系列视觉产出的一致性与效率。</div>
-  </div>
-</div>
+    <div class="eff-wrap">
+      <table class="eff-table">
+        <thead>
+          <tr><th>环节</th><th>传统方式</th><th>AI 工作流</th><th>实际产出</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="eff-stage">12 生肖主形象 + Q 版</td><td>约 2 周</td><td class="eff-ai">2 天</td><td class="eff-out">12 个角色形象</td></tr>
+          <tr><td class="eff-stage">衍生品效果图</td><td>约 1 周</td><td class="eff-ai">2&ndash;3 天</td><td class="eff-out">30+ 件（盲盒 / 小卡 / 玩偶 / 钥匙扣 / 文具）</td></tr>
+          <tr><td class="eff-stage">应用效果与展板</td><td>约 1 周</td><td class="eff-ai">2 天（与 AI 转插画并行）</td><td class="eff-out">全套应用效果 + 展板</td></tr>
+          <tr class="eff-total"><td class="eff-stage">全案合计</td><td>约 1 个月</td><td class="eff-ai">7 天</td><td class="eff-out">日均投入 4 小时（约 28 小时）</td></tr>
+        </tbody>
+      </table>
 
-<div class="wg-item">
-  <div class="wg-figure" style="flex:0 0 76%;">
-    <img src="Agent/思维.jpg" alt="设计前期思维发散过程截图">
-  </div>
-  <div class="wg-caption">
-    <div class="wg-name" style="font-size:13px;">设计前期创意思维发散</div>
-    <div class="wg-desc" style="font-size:10.5px;line-height:1.6;">借助AI在项目前期做多方向视觉与概念发散，拓展设计可能性；创意方向、审美决策权始终由我把握，AI作为辅助工具。</div>
-  </div>
-</div>
+      <div class="eff-note">
+        <p><b>迭代方式：</b>AI 先出一套初稿 &rarr; 逐轮修改 &rarr; 2 天内锁定终稿，避免多方案并行带来的重复返工。</p>
+        <p><b>说明：</b>除盲盒系列单独设计外，其余衍生品由 AI 直接生成效果图，未单独输出设计图。</p>
+      </div>
 
+      <div class="eff-shots">
+        <figure>
+          <img src="Agent/skill图.jpg" alt="Prompt 迭代与自定义 Skill 过程截图">
+          <figcaption>Prompt 迭代 &amp; 自定义 Skill 沉淀</figcaption>
+        </figure>
+        <figure>
+          <img src="Agent/思维.jpg" alt="设计前期思维发散过程截图">
+          <figcaption>设计前期创意思维发散</figcaption>
+        </figure>
+      </div>
     </div>
   </div>
 </div>
